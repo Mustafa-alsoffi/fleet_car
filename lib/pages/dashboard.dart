@@ -109,13 +109,6 @@ class DashboardPage extends StatelessWidget {
                         crossAxisSpacing: 10,
                         children: [
                           QuickActionCard(
-                            icon: Icons.list_alt,
-                            label: 'View Work Logs',
-                            onTap: () {
-                              // Navigate to Work Logs Page
-                            },
-                          ),
-                          QuickActionCard(
                             icon: Icons.directions_car,
                             label: 'Manage Cars',
                             onTap: () {
@@ -131,13 +124,6 @@ class DashboardPage extends StatelessWidget {
                                   context, Routes.manageCustomers);
                             },
                           ),
-                          QuickActionCard(
-                            icon: Icons.picture_as_pdf,
-                            label: 'Generate Reports',
-                            onTap: () {
-                              // Navigate to Generate Reports Page
-                            },
-                          ),
                         ],
                       ),
                     ],
@@ -146,6 +132,49 @@ class DashboardPage extends StatelessWidget {
               );
             }
           }),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Navigate to Dashboard
+              break;
+            case 1:
+              // Navigate to Work Logs
+              Navigator.pushNamed(context, Routes.manageWorkLogs);
+              break;
+            case 2:
+              // Navigate to Reports
+              break;
+            case 3:
+              // Navigate to Settings
+              break;
+          }
+        },
+        showUnselectedLabels: true,
+        items: [
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.dashboard, color: Colors.blue),
+            icon: Icon(Icons.dashboard, color: Colors.blueGrey),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.directions_car, color: Colors.blue),
+            icon: Icon(Icons.list_alt, color: Colors.blueGrey),
+            label: 'Work Logs',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.picture_as_pdf, color: Colors.blue),
+            icon: Icon(Icons.picture_as_pdf, color: Colors.blueGrey),
+            label: 'Reports',
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.settings, color: Colors.blue),
+            icon: Icon(Icons.settings, color: Colors.blueGrey),
+            label: 'Settings',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -162,7 +191,7 @@ class OverviewCard extends StatelessWidget {
     return Card(
       color: color,
       child: Container(
-        width: 110,
+        width: 118,
         height: 150,
         padding: EdgeInsets.all(8),
         child: Column(

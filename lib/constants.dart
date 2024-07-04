@@ -10,6 +10,7 @@ class Routes {
   static const String addEditCar = '/add-edit-car';
   static const String manageCustomers = '/manage-customers';
   static const String addEditCustomer = '/add-edit-customer';
+  static const String manageWorkLogs = '/manage-work-logs';
   static const String users = '/users';
 }
 

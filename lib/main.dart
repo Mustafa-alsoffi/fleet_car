@@ -7,6 +7,7 @@ import 'package:fleet_car/pages/manage_car/add_edit_car_page.dart';
 import 'package:fleet_car/pages/manage_car/manage_cars_page.dart';
 import 'package:fleet_car/pages/manage_customers/add_edit_customer_page.dart';
 import 'package:fleet_car/pages/manage_customers/manage_customers_page.dart';
+import 'package:fleet_car/pages/manage_work_logs_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
           Routes.addEditCar: (context) => AddEditCarPage(),
           Routes.manageCustomers: (context) => ManageCustomersPage(),
           Routes.addEditCustomer: (context) => AddEditCustomerPage(),
+          Routes.manageWorkLogs: (context) => ManageWorkLogsPage(),
         },
         theme: ThemeData(
           useMaterial3: true,
