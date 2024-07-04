@@ -1,0 +1,35 @@
+{
+    "name": "fleet_car",
+    "short_name": "fleet_car",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "The task involves developing a comprehensive car maintenance tracking system using Flutter. The system aims to streamline the management of a car fleet by tracking maintenance records, work logs, car availability, and condition status, as well as maintaining detailed customer records. Additionally, it includes features for dashboard reporting and generating monthly PDF reports. The company seeks to improve operational efficiency and provide clear, accessible information on car maintenance and customer interactions. The primary actors in this app are the admin (managing the system), mechanics (performing maintenance), and customers (owning or using the cars). The relationship between the customer and the service is one of service provision and record-keeping, ensuring that cars are maintained properly and customers are informed about their car's status and service history.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
