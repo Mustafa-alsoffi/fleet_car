@@ -58,38 +58,91 @@ class DashboardPage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      'Recent Activities',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Recent Records',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        // add a richtext widget that contains 3 colors with explaination
+                      ],
                     ),
                     SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        var car = snapshot.data![index];
-                        return ListTile(
-                          title: Text('Car model: ${car.model}'),
-                          subtitle: Text(
-                              'Availability Status: ${car.availabilityStatus}'),
-                          trailing: Icon(Icons.circle),
-                          iconColor: car.conditionStatus == 'green'
-                              ? Colors.green
-                              : car.conditionStatus == 'yellow'
-                                  ? Colors.yellow
-                                  : Colors.red,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CarDetailsPage(car: car),
-                              ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          WidgetSpan(
+                            child: Icon(Icons.circle,
+                                color: Colors.green, size: 15),
+                          ),
+                          TextSpan(
+                            text: ' Green: Good Condition\n',
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                          ),
+                          WidgetSpan(
+                            child: Icon(Icons.circle,
+                                color: Colors.yellow, size: 15),
+                          ),
+                          TextSpan(
+                            text: ' Yellow: Needs Washing\n',
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                          ),
+                          WidgetSpan(
+                            child:
+                                Icon(Icons.circle, color: Colors.red, size: 15),
+                          ),
+                          TextSpan(
+                            text: ' Red: broken',
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      // 20% of screen height
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      // add a left and right border
+                      decoration: BoxDecoration(
+                        border: Border(
+                          left: BorderSide(color: Colors.grey, width: 1),
+                          right: BorderSide(color: Colors.grey, width: 1),
+                        ),
+                      ),
+                      // add 5 to the right margin
+                      margin: EdgeInsets.only(right: 20),
+                      child: SingleChildScrollView(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            var car = snapshot.data![index];
+                            return ListTile(
+                              title: Text('Car model: ${car.model}'),
+                              subtitle: Text(
+                                  'Availability Status: ${car.availabilityStatus}'),
+                              trailing: Icon(Icons.circle),
+                              iconColor: car.conditionStatus == 'green'
+                                  ? Colors.green
+                                  : car.conditionStatus == 'yellow'
+                                      ? Colors.yellow
+                                      : Colors.red,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CarDetailsPage(car: car),
+                                  ),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
+                        ),
+                      ),
                     ),
                     SizedBox(height: 20),
                     Text(

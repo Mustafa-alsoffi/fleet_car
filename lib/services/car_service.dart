@@ -68,7 +68,7 @@ class CarService {
   Stream<List<Car>> getCarsStream() {
     return _carsCollection
         .orderBy('createdOn', descending: true)
-        .limit(5)
+        .limit(10)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs
             .map((doc) =>
