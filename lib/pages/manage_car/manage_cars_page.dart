@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/car_model.dart';
+import '../manage_worklogs/add_edit_worklog_page.dart';
 import 'add_edit_car_page.dart';
 
 class ManageCarPage extends StatefulWidget {
@@ -86,6 +87,20 @@ class _ManageCarPageState extends State<ManageCarPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          // add an icon button to add a work log
+                          IconButton(
+                            icon: Icon(Icons.list_alt),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AddEditWorkLogPage(
+                                    car: car,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                           IconButton(
                             icon: Icon(Icons.edit),
                             onPressed: () {

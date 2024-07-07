@@ -1,179 +1,132 @@
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import '../models/car_model.dart';
 import '../services/car_service.dart';
+import 'car_details_page.dart';
 
 class DashboardPage extends StatelessWidget {
   final CarService carService = CarService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard'),
-        // remove back button
         automaticallyImplyLeading: false,
       ),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-          stream: carService.getCarsStream(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No cars found'));
-            } else {
-              var availableCars = snapshot.data!
-                  .where((car) => car['availabilityStatus'] == 'available')
-                  .toList()
-                  .length;
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Overview Cards
-                      // add loading status until data is fetched
+      body: StreamBuilder<List<Car>>(
+        stream: carService.getCarsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No cars found'));
+          } else {
+            var availableCars = snapshot.data!
+                .where((car) => car.availabilityStatus == 'available')
+                .toList()
+                .length;
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          OverviewCard(
-                            title: 'Total Cars',
-                            value: '${snapshot.data!.length}',
-                            color: Colors.blue,
-                          ),
-                          OverviewCard(
-                            title: 'Unavailable Cars',
-                            value: '${snapshot.data!.length - availableCars}',
-                            color: Colors.orange,
-                          ),
-                          OverviewCard(
-                            title: 'Available Cars',
-                            value: '$availableCars',
-                            color: Colors.green,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      // Recent Activities Section
-                      Text(
-                        'Recent Activities',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!
-                            .length, // Replace with your dynamic list count
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                                'Car model: ${snapshot.data![index]['model']}'),
-                            subtitle: Text(
-                                'Availability Status: ${snapshot.data![index]['availabilityStatus']}'),
-                            trailing: Icon(Icons.circle),
-                            // add icon color based on condition status for 3 colors green yellow and red
-                            iconColor: snapshot.data![index]
-                                        ['conditionStatus'] ==
-                                    'green'
-                                ? Colors.green
-                                : snapshot.data![index]['conditionStatus'] ==
-                                        'yellow'
-                                    ? Colors.yellow
-                                    : Colors.red,
-
-                            onTap: () {
-                              // Navigate to the detailed view
-                            },
-                          );
-                        },
-                      ),
-                      SizedBox(height: 20),
-
-                      // Quick Actions Section
-                      Text(
-                        'Quick Actions',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 10),
-                      GridView.count(
-                        shrinkWrap: true,
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        children: [
-                          QuickActionCard(
-                            icon: Icons.directions_car,
-                            label: 'Manage Cars',
-                            onTap: () {
-                              // Navigate to Manage Cars Page
-                              Navigator.pushNamed(context, Routes.manageCars);
-                            },
-                          ),
-                          QuickActionCard(
-                            icon: Icons.people,
-                            label: 'Manage Customers',
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.manageCustomers);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        OverviewCard(
+                          title: 'Total Cars',
+                          value: '${snapshot.data!.length}',
+                          color: Colors.blue,
+                        ),
+                        OverviewCard(
+                          title: 'Unavailable Cars',
+                          value: '${snapshot.data!.length - availableCars}',
+                          color: Colors.orange,
+                        ),
+                        OverviewCard(
+                          title: 'Available Cars',
+                          value: '$availableCars',
+                          color: Colors.green,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Recent Activities',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        var car = snapshot.data![index];
+                        return ListTile(
+                          title: Text('Car model: ${car.model}'),
+                          subtitle: Text(
+                              'Availability Status: ${car.availabilityStatus}'),
+                          trailing: Icon(Icons.circle),
+                          iconColor: car.conditionStatus == 'green'
+                              ? Colors.green
+                              : car.conditionStatus == 'yellow'
+                                  ? Colors.yellow
+                                  : Colors.red,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CarDetailsPage(car: car),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Quick Actions',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    GridView.count(
+                      shrinkWrap: true,
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      children: [
+                        QuickActionCard(
+                          icon: Icons.directions_car,
+                          label: 'Manage Cars',
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.manageCars);
+                          },
+                        ),
+                        QuickActionCard(
+                          icon: Icons.people,
+                          label: 'Manage Customers',
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, Routes.manageCustomers);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            }
-          }),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              // Navigate to Dashboard
-              break;
-            case 1:
-              // Navigate to Work Logs
-              Navigator.pushNamed(context, Routes.manageWorkLogs);
-              break;
-            case 2:
-              // Navigate to Reports
-              break;
-            case 3:
-              // Navigate to Settings
-              break;
+              ),
+            );
           }
         },
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.dashboard, color: Colors.blue),
-            icon: Icon(Icons.dashboard, color: Colors.blueGrey),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.directions_car, color: Colors.blue),
-            icon: Icon(Icons.list_alt, color: Colors.blueGrey),
-            label: 'Work Logs',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.picture_as_pdf, color: Colors.blue),
-            icon: Icon(Icons.picture_as_pdf, color: Colors.blueGrey),
-            label: 'Reports',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.settings, color: Colors.blue),
-            icon: Icon(Icons.settings, color: Colors.blueGrey),
-            label: 'Settings',
-          ),
-        ],
       ),
     );
   }
@@ -236,7 +189,7 @@ class QuickActionCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 40, color: Colors.blue),
+              Icon(icon, size: 40, color: Colors.blueGrey),
               SizedBox(height: 10),
               Text(label, textAlign: TextAlign.center),
             ],

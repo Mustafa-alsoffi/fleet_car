@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Car {
   String id;
   String availabilityStatus;
@@ -12,7 +14,7 @@ class Car {
   int year;
   // add created on and updated on fields
   String createdOn;
-  String updatedOn;
+  String? updatedOn;
 
   Car({
     required this.id,
@@ -45,6 +47,23 @@ class Car {
       year: data['year'],
       createdOn: data['createdOn'] ?? DateTime.now().toString(),
       updatedOn: data['updatedOn'] ?? DateTime.now().toString(),
+    );
+  }
+
+  factory Car.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return Car(
+      id: doc.id,
+      make: doc['make'],
+      model: doc['model'],
+      carId: doc['carId'],
+      picture: doc['picture'],
+      year: doc['year'],
+      mileage: doc['mileage'],
+      licensePlate: doc['licensePlate'],
+      availabilityStatus: doc['availabilityStatus'],
+      conditionStatus: doc['conditionStatus'],
+      customerIds: List<String>.from(doc['customerIds']),
+      createdOn: doc['createdOn'],
     );
   }
 

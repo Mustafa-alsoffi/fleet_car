@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/car_model.dart';
+
 class CarService {
   final CollectionReference _carsCollection =
       FirebaseFirestore.instance.collection('cars');
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> createCar({
     required String carId,
     required String availabilityStatus,
@@ -51,14 +53,54 @@ class CarService {
     }
   }
 
-  Stream<List<Map<String, dynamic>>> getCarsStream() {
+  Future<List<Car>> getAllCars() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('cars').get();
+      return querySnapshot.docs.map((doc) {
+        return Car.fromDocumentSnapshot(doc);
+      }).toList();
+    } catch (e) {
+      print('Error getting cars: $e');
+      return [];
+    }
+  }
+
+  Stream<List<Car>> getCarsStream() {
     return _carsCollection
         .orderBy('createdOn', descending: true)
         .limit(5)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
+            .map((doc) =>
+                Car.fromMap(doc.data() as Map<String, dynamic>, doc.id))
             .toList());
+  }
+
+  // add getCarById method
+  Future<Car> getCarById(String carId) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _carsCollection.doc(carId).get();
+      return Car.fromMap(
+          documentSnapshot.data() as Map<String, dynamic>, documentSnapshot.id);
+    } catch (e) {
+      print('Error getting car by id: $e');
+      return Car(
+        id: '',
+        availabilityStatus: 'unavailable',
+        carId: '',
+        conditionStatus: 'red',
+        customerIds: [],
+        licensePlate: '',
+        make: '',
+        mileage: 0,
+        model: '',
+        picture: '',
+        year: 0,
+        createdOn: '',
+        updatedOn: '',
+      );
+    }
   }
 
   // get the number of availabe cars using the status field

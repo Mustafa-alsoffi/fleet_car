@@ -24,6 +24,10 @@ class WorkLog {
       date: (data['date'] as Timestamp).toDate(),
     );
   }
+  static WorkLog fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return WorkLog.fromMap(data, doc.id);
+  }
 
   Map<String, dynamic> toMap() {
     return {

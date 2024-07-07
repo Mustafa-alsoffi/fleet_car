@@ -21,11 +21,15 @@ class CustomerService {
       // return an empty list
       return Stream.value([]);
     }
-    // return _customerCollection.snapshots().map((snapshot) {
-    //   return snapshot.docs.map((doc) {
-    //     return Customer.fromMap(doc.data() as Map<String, dynamic>, doc.id);
-    //   }).toList();
-    // });
+  }
+
+  Stream<List<Customer>> getCustomersByCarId(String carId) {
+    return _firestore
+        .collection('customers')
+        .where('carId', isEqualTo: carId)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Customer.fromFirestore(doc)).toList());
   }
 
   Future<void> createCustomer(Customer customer) async {

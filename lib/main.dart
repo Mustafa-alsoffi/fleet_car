@@ -3,11 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fleet_car/pages/auth_pages/login_page.dart';
 import 'package:fleet_car/pages/auth_pages/signup_page.dart';
 import 'package:fleet_car/pages/dashboard.dart';
+import 'package:fleet_car/pages/home.dart';
 import 'package:fleet_car/pages/manage_car/add_edit_car_page.dart';
 import 'package:fleet_car/pages/manage_car/manage_cars_page.dart';
 import 'package:fleet_car/pages/manage_customers/add_edit_customer_page.dart';
 import 'package:fleet_car/pages/manage_customers/manage_customers_page.dart';
-import 'package:fleet_car/pages/manage_work_logs_page.dart';
+import 'package:fleet_car/pages/manage_worklogs/manage_work_logs_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +87,7 @@ class AuthCheck extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
-          return DashboardPage();
+          return Homepage();
         } else {
           return LoginPage();
         }

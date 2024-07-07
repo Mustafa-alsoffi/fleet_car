@@ -12,6 +12,15 @@ class WorkLogService {
             .toList());
   }
 
+  Stream<List<WorkLog>> getWorkLogsByCarId(String carId) {
+    return _firestore
+        .collection('workLogs')
+        .where('carId', isEqualTo: carId)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => WorkLog.fromFirestore(doc)).toList());
+  }
+
   Future<void> createWorkLog(WorkLog workLog) async {
     await _firestore.collection('workLogs').add(workLog.toMap());
   }
