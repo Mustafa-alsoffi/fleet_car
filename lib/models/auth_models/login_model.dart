@@ -44,4 +44,12 @@ class LoginModel extends ChangeNotifier {
       }
     }
   }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut();
+    _isLoading = false;
+    _errorMessage = '';
+    _successMessage = '';
+    notifyListeners();
+  }
 }

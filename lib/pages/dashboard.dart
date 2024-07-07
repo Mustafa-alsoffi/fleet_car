@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
+import '../models/auth_models/login_model.dart';
 import '../models/car_model.dart';
 import '../services/car_service.dart';
 import 'car_details_page.dart';
 
 class DashboardPage extends StatelessWidget {
   final CarService carService = CarService();
+  final loginModel = LoginModel();
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,22 @@ class DashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard'),
         automaticallyImplyLeading: false,
+        // add a logout button
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              // logout from firebase auth
+              loginModel.signOut();
+              // navigate to login page without causing Navigator Locking
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.login,
+                (route) => false,
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<List<Car>>(
         stream: carService.getCarsStream(),
@@ -194,30 +212,30 @@ class OverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: color,
-      child: Container(
-        width: 118,
-        height: 150,
-        padding: EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: TextStyle(color: Colors.white, fontSize: 14),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 5),
-            Text(
-              value,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    return Expanded(
+      child: Card(
+        color: color,
+        child: Container(
+          height: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 5),
+              Text(
+                value,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

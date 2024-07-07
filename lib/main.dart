@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
         routes: {
           Routes.register: (context) => SignUpPage(),
           Routes.login: (context) => LoginPage(),
+          Routes.home: (context) => Homepage(),
           Routes.dashboard: (context) => DashboardPage(),
           Routes.manageCars: (context) => ManageCarPage(),
           Routes.addEditCar: (context) => AddEditCarPage(),

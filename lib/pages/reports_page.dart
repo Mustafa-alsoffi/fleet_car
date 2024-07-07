@@ -172,10 +172,10 @@ class _ReportsPageState extends State<ReportsPage> {
                   text: TextSpan(
                     children: [
                       WidgetSpan(
-                        child: Icon(Icons.info, color: Colors.blue),
+                        child: Icon(Icons.info, color: Colors.grey, size: 15),
                       ),
                       TextSpan(
-                        text: '\n These reports are generated monthly.',
+                        text: ' These reports are generated monthly.',
                         style: TextStyle(color: Colors.black, fontSize: 12),
                       ),
                     ],
@@ -189,6 +189,8 @@ class _ReportsPageState extends State<ReportsPage> {
               itemCount: _pdfReports.length,
               itemBuilder: (context, index) {
                 return ListTile(
+                  // add bottom border
+                  shape: Border(bottom: BorderSide(color: Colors.grey)),
                   title: Text(_pdfReports[index].path.split('/').last),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
