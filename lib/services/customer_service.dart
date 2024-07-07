@@ -23,6 +23,20 @@ class CustomerService {
     }
   }
 
+  // add getAllCustomers
+  Future<List<Customer>> getAllCustomers() async {
+    try {
+      final snapshot = await _customerCollection.get();
+      return snapshot.docs
+          .map((doc) =>
+              Customer.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+          .toList();
+    } catch (e) {
+      print('Error getting all customers: $e');
+      return [];
+    }
+  }
+
   Stream<List<Customer>> getCustomersByCarId(String carId) {
     return _firestore
         .collection('customers')

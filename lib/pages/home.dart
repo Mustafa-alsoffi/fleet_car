@@ -55,7 +55,7 @@ class _HomepageState extends State<Homepage> {
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            activeIcon: Icon(Icons.directions_car, color: Colors.blue),
+            activeIcon: Icon(Icons.list_alt, color: Colors.blue),
             icon: Icon(Icons.list_alt, color: Colors.blueGrey),
             label: 'Work Logs',
           ),
