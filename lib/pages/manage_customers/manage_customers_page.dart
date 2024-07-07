@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/customer_model.dart';
@@ -11,7 +10,6 @@ class ManageCustomersPage extends StatefulWidget {
 }
 
 class _ManageCustomersPageState extends State<ManageCustomersPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CustomerService _customerService = CustomerService();
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -20,6 +18,33 @@ class _ManageCustomersPageState extends State<ManageCustomersPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<bool> _showDeleteConfirmationDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Customer Record'),
+          content:
+              Text('Are you sure you want to delete this customer record?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
   }
 
   @override
@@ -89,10 +114,12 @@ class _ManageCustomersPageState extends State<ManageCustomersPage> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () =>
-                                _customerService.deleteCustomer(customer.id),
-                          ),
+                              icon: Icon(Icons.delete),
+                              onPressed: () async {
+                                if (await _showDeleteConfirmationDialog()) {
+                                  _customerService.deleteCustomer(customer.id);
+                                }
+                              }),
                         ],
                       ),
                     );

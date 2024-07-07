@@ -15,15 +15,9 @@ class _ManageCarPageState extends State<ManageCarPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  Future<void> _addCar(Car car) async {
-    await _firestore.collection('cars').add(car.toMap());
-  }
-
-  Future<void> _updateCar(Car car) async {
-    await _firestore.collection('cars').doc(car.id).update(car.toMap());
-  }
-
   Future<void> _deleteCar(String id) async {
+    final confirmed = await _showDeleteConfirmationDialog();
+    if (!confirmed) return;
     await _firestore.collection('cars').doc(id).delete();
   }
 
@@ -31,6 +25,32 @@ class _ManageCarPageState extends State<ManageCarPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<bool> _showDeleteConfirmationDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Car Record'),
+          content: Text('Are you sure you want to delete this car record?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
   }
 
   @override

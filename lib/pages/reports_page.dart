@@ -109,17 +109,46 @@ class _ReportsPageState extends State<ReportsPage> {
   }
 
   Future<void> _deleteReport(File report) async {
-    try {
-      await report.delete();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Report deleted: ${report.path}')),
-      );
-      _loadReports(); // Reload the reports list
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting report: $e')),
-      );
+    bool confirmDelete = await _showDeleteConfirmationDialog();
+    if (confirmDelete) {
+      try {
+        await report.delete();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Report deleted: ${report.path}')),
+        );
+        _loadReports(); // Reload the reports list
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting report: $e')),
+        );
+      }
     }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Report'),
+          content: Text('Are you sure you want to delete this report?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
   }
 
   @override
