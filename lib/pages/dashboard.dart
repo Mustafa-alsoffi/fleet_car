@@ -4,11 +4,19 @@ import '../constants.dart';
 import '../models/auth_models/login_model.dart';
 import '../models/car_model.dart';
 import '../services/car_service.dart';
+import 'auth_pages/login_page.dart';
 import 'car_details_page.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
+  @override
+  _DashboardPageState createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
   final CarService carService = CarService();
   final loginModel = LoginModel();
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +24,13 @@ class DashboardPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard'),
         automaticallyImplyLeading: false,
-        // add a logout button
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              // logout from firebase auth
+            onPressed: () async {
               loginModel.signOut();
-              // navigate to login page without causing Navigator Locking
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.login,
-                (route) => false,
-              );
+              await Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => LoginPage()));
             },
           ),
         ],
@@ -47,6 +49,11 @@ class DashboardPage extends StatelessWidget {
                 .where((car) => car.availabilityStatus == 'available')
                 .toList()
                 .length;
+            var filteredCars = snapshot.data!.where((car) {
+              return car.model
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase());
+            }).toList();
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -84,60 +91,85 @@ class DashboardPage extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        // add a richtext widget that contains 3 colors with explaination
                       ],
                     ),
                     SizedBox(height: 10),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          WidgetSpan(
-                            child: Icon(Icons.circle,
-                                color: Colors.green, size: 15),
+                    Row(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              WidgetSpan(
+                                child: Icon(Icons.circle,
+                                    color: Colors.green, size: 15),
+                              ),
+                              TextSpan(
+                                text: ' Green: Good Condition\n',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                              WidgetSpan(
+                                child: Icon(Icons.circle,
+                                    color: Colors.yellow, size: 15),
+                              ),
+                              TextSpan(
+                                text: ' Yellow: Needs Washing\n',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                              WidgetSpan(
+                                child: Icon(Icons.circle,
+                                    color: Colors.red, size: 15),
+                              ),
+                              TextSpan(
+                                text: ' Red: broken',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: ' Green: Good Condition\n',
-                            style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            decoration: InputDecoration(
+                              // decrease the width of the search bar
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 0),
+                              hintText: 'Search Cars',
+                              prefixIcon: Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            // onsubmit or enter change state
+                            onEditingComplete: () {
+                              setState(() {
+                                searchQuery = searchController.text;
+                              });
+                            },
                           ),
-                          WidgetSpan(
-                            child: Icon(Icons.circle,
-                                color: Colors.yellow, size: 15),
-                          ),
-                          TextSpan(
-                            text: ' Yellow: Needs Washing\n',
-                            style: TextStyle(color: Colors.black, fontSize: 12),
-                          ),
-                          WidgetSpan(
-                            child:
-                                Icon(Icons.circle, color: Colors.red, size: 15),
-                          ),
-                          TextSpan(
-                            text: ' Red: broken',
-                            style: TextStyle(color: Colors.black, fontSize: 12),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 20),
                     Container(
-                      // 20% of screen height
                       height: MediaQuery.of(context).size.height * 0.4,
-                      // add a left and right border
                       decoration: BoxDecoration(
                         border: Border(
                           left: BorderSide(color: Colors.grey, width: 1),
                           right: BorderSide(color: Colors.grey, width: 1),
                         ),
                       ),
-                      // add 5 to the right margin
                       margin: EdgeInsets.only(right: 20),
                       child: SingleChildScrollView(
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data!.length,
+                          itemCount: filteredCars.length,
                           itemBuilder: (context, index) {
-                            var car = snapshot.data![index];
+                            var car = filteredCars[index];
                             return ListTile(
                               title: Text('Car model: ${car.model}'),
                               subtitle: Text(
@@ -168,12 +200,11 @@ class DashboardPage extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 10),
                     GridView.count(
                       shrinkWrap: true,
                       crossAxisCount: 2,
                       mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
+                      crossAxisSpacing: 5,
                       children: [
                         QuickActionCard(
                           icon: Icons.directions_car,
@@ -256,12 +287,12 @@ class QuickActionCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 40, color: Colors.blueGrey),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Text(label, textAlign: TextAlign.center),
             ],
           ),
