@@ -46,6 +46,7 @@ dependencies:
   pdf: ^3.11.0
   permission_handler: ^10.0.0+1
   open_file: ^3.3.2
+  google_maps_flutter: ^2.5.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
