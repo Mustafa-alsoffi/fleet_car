@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
           // Define the default brightness and colors.
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.blueGrey,
-            surfaceTint: Colors.white,
-            brightness: Brightness.light,
+            surfaceTint: Colors.grey,
+            brightness: Brightness.dark,
           ),
 
           // Define the default `TextTheme`. Use this to specify the default
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
             // ···
-            titleLarge: GoogleFonts.oswald(
+            titleLarge: GoogleFonts.bebasNeue(
               fontSize: 30,
               fontStyle: FontStyle.italic,
             ),
