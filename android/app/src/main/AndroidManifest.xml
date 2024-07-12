@@ -29,9 +29,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data
-            android:name="com.google.android.geo.AIzaSyAzkpCYuV8QL0DOeaWR0E120-TYE8U4hy0"
-            android:value="AIzaSyAzkpCYuV8QL0DOeaWR0E120-TYE8U4hy0"/>
 
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
